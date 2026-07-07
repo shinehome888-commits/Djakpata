@@ -1,21 +1,11 @@
 /* ============================================
    AMETCHON DJAKPATA - Spiritual & Herbal Center
    Multi-Page Navigation System (Vanilla JS)
-   
-   Features:
-   - Only one section visible at a time
-   - Menu clicks switch between "pages"
-   - Smooth fade-in transitions
-   - Mobile menu support
-   - Navbar scroll effect
 ============================================ */
 
 (function () {
     'use strict';
 
-    /* ============================================
-       DOM ELEMENTS
-    ============================================= */
     const navbar = document.getElementById('navbar');
     const navMenu = document.getElementById('navMenu');
     const navToggle = document.getElementById('navToggle');
@@ -23,23 +13,19 @@
     const allSections = document.querySelectorAll('.page-section');
     const backToTop = document.getElementById('backToTop');
 
-    /* ============================================
-       PAGE SWITCHING FUNCTION
-       Hides all sections, shows only the target
-    ============================================= */
+    // Valid page sections (gallery removed)
+    const validSections = ['home', 'about', 'services', 'why-choose-us', 'testimonials', 'contact'];
+
     function showPage(targetId) {
-        // Hide all sections
         allSections.forEach(function (section) {
             section.classList.remove('active');
         });
 
-        // Show the target section
         const targetSection = document.getElementById(targetId);
         if (targetSection) {
             targetSection.classList.add('active');
         }
 
-        // Update active nav link
         allNavLinks.forEach(function (link) {
             link.classList.remove('active');
             if (link.getAttribute('data-target') === targetId) {
@@ -47,16 +33,12 @@
             }
         });
 
-        // Scroll to top smoothly
         window.scrollTo({
             top: 0,
             behavior: 'smooth'
         });
     }
 
-    /* ============================================
-       NAVBAR SCROLL EFFECT
-    ============================================= */
     function handleNavbarScroll() {
         if (window.scrollY > 80) {
             navbar.classList.add('scrolled');
@@ -65,9 +47,6 @@
         }
     }
 
-    /* ============================================
-       BACK TO TOP BUTTON VISIBILITY
-    ============================================= */
     function handleBackToTopVisibility() {
         if (window.scrollY > 300) {
             backToTop.classList.add('visible');
@@ -76,9 +55,6 @@
         }
     }
 
-    /* ============================================
-       MOBILE MENU TOGGLE
-    ============================================= */
     function toggleMobileMenu() {
         navMenu.classList.toggle('active');
         navToggle.classList.toggle('active');
@@ -104,10 +80,6 @@
         spans[2].style.transform = 'none';
     }
 
-    /* ============================================
-       HANDLE NAVIGATION CLICKS
-       Prevents default scroll, switches page instead
-    ============================================= */
     function handleNavClick(e) {
         e.preventDefault();
         const targetId = this.getAttribute('data-target');
@@ -118,9 +90,6 @@
         }
     }
 
-    /* ============================================
-       BACK TO TOP CLICK HANDLER
-    ============================================= */
     function handleBackToTopClick() {
         window.scrollTo({
             top: 0,
@@ -128,13 +97,8 @@
         });
     }
 
-    /* ============================================
-       HANDLE BROWSER BACK/FORWARD BUTTONS
-       Uses hash to navigate between pages
-    ============================================= */
     function handleHashChange() {
         const hash = window.location.hash.replace('#', '');
-        const validSections = ['home', 'about', 'services', 'why-choose-us', 'gallery', 'testimonials', 'contact'];
         
         if (hash && validSections.includes(hash)) {
             showPage(hash);
@@ -143,11 +107,7 @@
         }
     }
 
-    /* ============================================
-       EVENT LISTENERS
-    ============================================= */
-    
-    // Scroll events (throttled)
+    // Scroll events
     let scrollTimeout;
     window.addEventListener('scroll', function () {
         if (scrollTimeout) {
@@ -159,22 +119,18 @@
         });
     });
 
-    // Mobile menu toggle
     if (navToggle) {
         navToggle.addEventListener('click', toggleMobileMenu);
     }
 
-    // All navigation links (menu, footer, service cards)
     allNavLinks.forEach(function (link) {
         link.addEventListener('click', handleNavClick);
     });
 
-    // Back to top button
     if (backToTop) {
         backToTop.addEventListener('click', handleBackToTopClick);
     }
 
-    // Close mobile menu when clicking outside
     document.addEventListener('click', function (e) {
         if (navMenu && navMenu.classList.contains('active')) {
             if (!navMenu.contains(e.target) && !navToggle.contains(e.target)) {
@@ -183,28 +139,20 @@
         }
     });
 
-    // Close mobile menu on escape key
     document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape' && navMenu.classList.contains('active')) {
             closeMobileMenu();
         }
     });
 
-    // Browser back/forward buttons
     window.addEventListener('hashchange', handleHashChange);
 
-    /* ============================================
-       INITIALIZATION
-    ============================================= */
     document.addEventListener('DOMContentLoaded', function () {
-        // Check if there's a hash in the URL on load
         const initialHash = window.location.hash.replace('#', '');
-        const validSections = ['home', 'about', 'services', 'why-choose-us', 'gallery', 'testimonials', 'contact'];
         
         if (initialHash && validSections.includes(initialHash)) {
             showPage(initialHash);
         } else {
-            // Default: show home page only
             showPage('home');
         }
 
