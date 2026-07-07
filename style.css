@@ -64,7 +64,6 @@ body {
 
 /* ============================================
    PAGE SWITCHING SYSTEM
-   Only one section visible at a time
 ============================================ */
 .page-section {
     display: none;
@@ -75,7 +74,6 @@ body {
     display: block;
 }
 
-/* Hero section is full viewport when active */
 .page-section.active.hero {
     display: flex;
 }
@@ -408,31 +406,96 @@ p {
     margin-bottom: var(--space-lg);
 }
 
+/* ============================================
+   HERO LOGO - 3D ROTATING WITH FULL FIT
+   Logo fits fully inside circle, bolder, slow rotation
+============================================ */
 .logo-circle {
-    width: 140px;
-    height: 140px;
+    width: 180px;
+    height: 180px;
     margin: 0 auto;
     border-radius: 50%;
-    border: 3px solid var(--color-gold);
+    border: 4px solid var(--color-gold);
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.1);
+    background: radial-gradient(circle, rgba(253, 246, 236, 0.95) 0%, rgba(232, 213, 163, 0.85) 100%);
     backdrop-filter: blur(5px);
-    box-shadow: 0 0 40px rgba(201, 162, 39, 0.2);
     overflow: hidden;
+    perspective: 1000px;
+    box-shadow: 
+        0 0 0 2px rgba(201, 162, 39, 0.3),
+        0 10px 30px rgba(0, 0, 0, 0.4),
+        0 0 50px rgba(201, 162, 39, 0.25),
+        inset 0 0 20px rgba(255, 255, 255, 0.3);
 }
 
 .logo-circle img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    width: 92%;
+    height: 92%;
+    object-fit: contain;
     border-radius: 50%;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3)) 
+            drop-shadow(0 0 10px rgba(201, 162, 39, 0.2));
+    transform: scale(1.02);
 }
 
 .logo-fallback {
     font-size: 2.5rem;
     color: var(--color-gold);
+}
+
+/* 3D Slow Rotation Animation for Hero Logo */
+.logo-3d-hero {
+    transform-style: preserve-3d;
+    animation: heroLogoRotate3D 15s linear infinite;
+}
+
+.logo-3d-hero:hover {
+    animation-play-state: paused;
+}
+
+@keyframes heroLogoRotate3D {
+    0% {
+        transform: rotateY(0deg) scale(1);
+        box-shadow: 
+            0 0 0 2px rgba(201, 162, 39, 0.3),
+            15px 10px 30px rgba(0, 0, 0, 0.4),
+            0 0 50px rgba(201, 162, 39, 0.25),
+            inset 0 0 20px rgba(255, 255, 255, 0.3);
+    }
+    25% {
+        transform: rotateY(90deg) scale(1.03);
+        box-shadow: 
+            0 0 0 2px rgba(201, 162, 39, 0.3),
+            5px 15px 25px rgba(0, 0, 0, 0.45),
+            0 0 60px rgba(201, 162, 39, 0.35),
+            inset 0 0 25px rgba(255, 255, 255, 0.4);
+    }
+    50% {
+        transform: rotateY(180deg) scale(1);
+        box-shadow: 
+            0 0 0 2px rgba(201, 162, 39, 0.3),
+            -15px 10px 30px rgba(0, 0, 0, 0.4),
+            0 0 50px rgba(201, 162, 39, 0.25),
+            inset 0 0 20px rgba(255, 255, 255, 0.3);
+    }
+    75% {
+        transform: rotateY(270deg) scale(1.03);
+        box-shadow: 
+            0 0 0 2px rgba(201, 162, 39, 0.3),
+            -5px 15px 25px rgba(0, 0, 0, 0.45),
+            0 0 60px rgba(201, 162, 39, 0.35),
+            inset 0 0 25px rgba(255, 255, 255, 0.4);
+    }
+    100% {
+        transform: rotateY(360deg) scale(1);
+        box-shadow: 
+            0 0 0 2px rgba(201, 162, 39, 0.3),
+            15px 10px 30px rgba(0, 0, 0, 0.4),
+            0 0 50px rgba(201, 162, 39, 0.25),
+            inset 0 0 20px rgba(255, 255, 255, 0.3);
+    }
 }
 
 .hero-title {
@@ -716,14 +779,7 @@ p {
     font-size: 0.9rem;
     line-height: 1.7;
     color: var(--color-text-light);
-    margin-bottom: var(--space-md);
-}
-
-.service-buttons {
-    display: flex;
-    gap: 0.75rem;
-    justify-content: center;
-    flex-wrap: wrap;
+    margin-bottom: 0;
 }
 
 /* ============================================
@@ -778,83 +834,6 @@ p {
     font-size: 0.95rem;
     line-height: 1.7;
     color: var(--color-text-light);
-}
-
-/* ============================================
-   GALLERY SECTION
-============================================ */
-.gallery {
-    padding: calc(var(--space-xxl) + 60px) 0 var(--space-xxl);
-    background-color: var(--color-cream);
-}
-
-.gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-auto-rows: 250px;
-    gap: var(--space-sm);
-}
-
-.gallery-item {
-    position: relative;
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    cursor: pointer;
-}
-
-.gallery-item-large {
-    grid-column: span 2;
-}
-
-.gallery-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform var(--transition-slow);
-}
-
-.gallery-item:hover img {
-    transform: scale(1.05);
-}
-
-.gallery-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: var(--space-md);
-    background: linear-gradient(to top, rgba(13, 40, 24, 0.8), transparent);
-    transform: translateY(100%);
-    transition: transform var(--transition-medium);
-}
-
-.gallery-item:hover .gallery-overlay {
-    transform: translateY(0);
-}
-
-.gallery-label {
-    color: var(--color-white);
-    font-size: 0.9rem;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-}
-
-.gallery-placeholder {
-    background: linear-gradient(135deg, var(--color-forest-green) 0%, #2D5A44 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.gallery-placeholder::after {
-    content: '🌿';
-    font-size: 3rem;
-    opacity: 0.5;
-}
-
-.gallery-cta {
-    text-align: center;
-    margin-top: var(--space-xl);
 }
 
 /* ============================================
@@ -940,7 +919,7 @@ p {
 }
 
 /* ============================================
-   CONTACT SECTION
+   CONTACT SECTION (Single column now)
 ============================================ */
 .contact {
     padding: calc(var(--space-xxl) + 60px) 0 var(--space-xxl);
@@ -948,11 +927,9 @@ p {
     position: relative;
 }
 
-.contact-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-xl);
-    align-items: start;
+.contact-content-single {
+    max-width: 700px;
+    margin: 0 auto;
 }
 
 .contact-info {
@@ -1004,60 +981,6 @@ p {
     font-size: 0.9rem;
     color: var(--color-text-light);
     margin-bottom: 0.2rem;
-}
-
-.contact-cta {
-    display: flex;
-    align-items: center;
-}
-
-.cta-card {
-    background: linear-gradient(135deg, var(--color-forest-green), var(--color-dark-green));
-    border-radius: var(--radius-lg);
-    padding: var(--space-xl) var(--space-lg);
-    text-align: center;
-    color: var(--color-white);
-    position: relative;
-    overflow: hidden;
-}
-
-.cta-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0.05;
-    background-image: 
-        repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(255, 255, 255, 0.5) 20px, rgba(255, 255, 255, 0.5) 21px);
-}
-
-.cta-decoration {
-    font-size: 2rem;
-    margin-bottom: var(--space-sm);
-    position: relative;
-}
-
-.cta-card h3 {
-    color: var(--color-white);
-    font-size: 1.5rem;
-    margin-bottom: var(--space-sm);
-    position: relative;
-}
-
-.cta-card p {
-    color: rgba(255, 255, 255, 0.85);
-    margin-bottom: var(--space-md);
-    position: relative;
-    line-height: 1.7;
-}
-
-.cta-note {
-    color: var(--color-light-gold) !important;
-    font-size: 0.85rem;
-    margin-top: var(--space-md);
-    letter-spacing: 1px;
 }
 
 /* ============================================
@@ -1172,6 +1095,20 @@ p {
 .footer-bottom p {
     font-size: 0.85rem;
     color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 0.3rem;
+}
+
+/* KS1 Empire Global Foundation Credit */
+.footer-powered {
+    font-size: 0.8rem;
+    color: var(--color-light-gold);
+    letter-spacing: 1.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px dashed rgba(232, 213, 163, 0.3);
+    display: inline-block;
 }
 
 /* ============================================
@@ -1277,20 +1214,8 @@ p {
         order: -1;
     }
 
-    .contact-content {
-        grid-template-columns: 1fr;
-    }
-
     .footer-content {
         grid-template-columns: 1fr 1fr;
-    }
-
-    .gallery-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .gallery-item-large {
-        grid-column: span 2;
     }
 }
 
@@ -1336,15 +1261,6 @@ p {
     .why-us-grid,
     .testimonials-grid {
         grid-template-columns: 1fr;
-    }
-
-    .gallery-grid {
-        grid-template-columns: 1fr 1fr;
-        grid-auto-rows: 180px;
-    }
-
-    .gallery-item-large {
-        grid-column: span 1;
     }
 
     .about-features {
@@ -1409,21 +1325,12 @@ p {
     }
 
     .logo-circle {
-        width: 110px;
-        height: 110px;
+        width: 140px;
+        height: 140px;
     }
 
     .service-card {
         padding: var(--space-md);
-    }
-
-    .cta-card {
-        padding: var(--space-lg) var(--space-md);
-    }
-
-    .btn-whatsapp-large {
-        padding: 0.9rem 1.8rem;
-        font-size: 1rem;
     }
 }
 
