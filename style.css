@@ -1,20 +1,8 @@
 /* ============================================
    AMETCHON DJAKPATA - Spiritual & Herbal Center
    Premium Classic Website Stylesheet
-   
-   Color Palette:
-   - Deep Forest Green: #1B4332
-   - Gold: #C9A227
-   - Cream: #FDF6EC
-   - Earth Brown: #6B4226
-   - White: #FFFFFF
-   - Dark Green: #0D2818
-   - Light Gold: #E8D5A3
 ============================================ */
 
-/* ============================================
-   CSS RESET & BASE STYLES
-============================================ */
 *,
 *::before,
 *::after {
@@ -24,7 +12,6 @@
 }
 
 :root {
-    /* Primary Colors */
     --color-forest-green: #1B4332;
     --color-dark-green: #0D2818;
     --color-gold: #C9A227;
@@ -33,46 +20,33 @@
     --color-earth-brown: #6B4226;
     --color-white: #FFFFFF;
     --color-off-white: #FAFAF5;
-    
-    /* Secondary Colors */
     --color-text-dark: #2D2D2D;
     --color-text-medium: #555555;
     --color-text-light: #777777;
     --color-whatsapp: #25D366;
     --color-whatsapp-dark: #128C7E;
-    
-    /* Typography */
     --font-heading: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
     --font-body: 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     --font-accent: 'Cormorant Garamond', Georgia, serif;
-    
-    /* Spacing */
     --space-xs: 0.5rem;
     --space-sm: 1rem;
     --space-md: 1.5rem;
     --space-lg: 2.5rem;
     --space-xl: 4rem;
     --space-xxl: 6rem;
-    
-    /* Transitions */
     --transition-fast: 0.2s ease;
     --transition-medium: 0.3s ease;
     --transition-slow: 0.5s ease;
-    
-    /* Shadows */
     --shadow-sm: 0 2px 8px rgba(27, 67, 50, 0.08);
     --shadow-md: 0 4px 16px rgba(27, 67, 50, 0.12);
     --shadow-lg: 0 8px 32px rgba(27, 67, 50, 0.16);
     --shadow-gold: 0 4px 20px rgba(201, 162, 39, 0.2);
-    
-    /* Border Radius */
     --radius-sm: 8px;
     --radius-md: 12px;
     --radius-lg: 20px;
     --radius-xl: 30px;
 }
 
-/* Smooth Scroll */
 html {
     scroll-behavior: smooth;
     font-size: 16px;
@@ -89,8 +63,34 @@ body {
 }
 
 /* ============================================
-   UTILITY CLASSES
+   PAGE SWITCHING SYSTEM
+   Only one section visible at a time
 ============================================ */
+.page-section {
+    display: none;
+    animation: pageFadeIn 0.5s ease forwards;
+}
+
+.page-section.active {
+    display: block;
+}
+
+/* Hero section is full viewport when active */
+.page-section.active.hero {
+    display: flex;
+}
+
+@keyframes pageFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .container {
     width: 100%;
     max-width: 1200px;
@@ -110,9 +110,6 @@ a {
     transition: var(--transition-medium);
 }
 
-/* ============================================
-   TYPOGRAPHY
-============================================ */
 h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
     font-weight: 600;
@@ -130,9 +127,6 @@ p {
     margin-bottom: var(--space-sm);
 }
 
-/* ============================================
-   SECTION HEADER STYLES
-============================================ */
 .section-header {
     text-align: center;
     margin-bottom: var(--space-xl);
@@ -284,6 +278,7 @@ p {
     color: var(--color-white);
     letter-spacing: 1px;
     transition: var(--transition-medium);
+    cursor: pointer;
 }
 
 #navbar.scrolled .nav-logo {
@@ -302,6 +297,7 @@ p {
     color: rgba(255, 255, 255, 0.9);
     padding: 0.3rem 0;
     position: relative;
+    cursor: pointer;
 }
 
 .nav-link::after {
@@ -346,7 +342,6 @@ p {
     transform: translateY(-1px);
 }
 
-/* Mobile Navigation Toggle */
 .nav-toggle {
     display: none;
     flex-direction: column;
@@ -374,14 +369,12 @@ p {
 .hero {
     position: relative;
     min-height: 100vh;
-    display: flex;
     align-items: center;
     justify-content: center;
     background: linear-gradient(135deg, var(--color-dark-green) 0%, var(--color-forest-green) 50%, #2D5A44 100%);
     overflow: hidden;
 }
 
-/* African-inspired subtle pattern */
 .hero-pattern {
     position: absolute;
     top: 0;
@@ -394,7 +387,6 @@ p {
         repeating-linear-gradient(-45deg, transparent, transparent 35px, rgba(201, 162, 39, 0.5) 35px, rgba(201, 162, 39, 0.5) 36px);
 }
 
-/* Gradient overlay for depth */
 .hero-overlay {
     position: absolute;
     top: 0;
@@ -417,8 +409,8 @@ p {
 }
 
 .logo-circle {
-    width: 120px;
-    height: 120px;
+    width: 140px;
+    height: 140px;
     margin: 0 auto;
     border-radius: 50%;
     border: 3px solid var(--color-gold);
@@ -428,12 +420,14 @@ p {
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(5px);
     box-shadow: 0 0 40px rgba(201, 162, 39, 0.2);
+    overflow: hidden;
 }
 
 .logo-circle img {
-    width: 80px;
-    height: 80px;
-    object-fit: contain;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
 }
 
 .logo-fallback {
@@ -491,69 +485,86 @@ p {
     font-size: clamp(1rem, 2vw, 1.3rem);
     color: rgba(255, 255, 255, 0.8);
     font-style: italic;
-    margin-bottom: var(--space-xl);
+    margin-bottom: 0;
 }
 
-.hero-whatsapp-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.75rem;
-    background-color: var(--color-whatsapp);
-    color: var(--color-white);
-    padding: 1.1rem 2.5rem;
-    border-radius: var(--radius-xl);
-    font-size: 1.1rem;
-    font-weight: 700;
-    transition: all var(--transition-medium);
-    box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
-}
-
-.hero-whatsapp-btn:hover {
-    background-color: var(--color-whatsapp-dark);
-    transform: translateY(-3px);
-    box-shadow: 0 8px 30px rgba(37, 211, 102, 0.5);
-}
-
-/* Scroll Indicator */
-.scroll-indicator {
-    position: absolute;
-    bottom: 2rem;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 2;
+/* ============================================
+   3D ANIMATED LOGO (ABOUT SECTION)
+============================================ */
+.logo-3d-wrapper {
+    perspective: 1000px;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
+    justify-content: center;
+    background: transparent !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+    border-radius: 0 !important;
+    height: auto !important;
 }
 
-.scroll-indicator span {
-    font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.6);
-    letter-spacing: 2px;
-    text-transform: uppercase;
+.logo-3d {
+    width: 100%;
+    max-width: 420px;
+    height: auto;
+    border-radius: var(--radius-lg);
+    box-shadow: 
+        0 10px 30px rgba(27, 67, 50, 0.25),
+        0 20px 60px rgba(13, 40, 24, 0.2),
+        inset 0 0 0 3px rgba(201, 162, 39, 0.3);
+    transform-style: preserve-3d;
+    animation: logo3DFloat 6s ease-in-out infinite;
+    transition: transform 0.3s ease;
 }
 
-.scroll-arrow {
-    width: 20px;
-    height: 20px;
-    border-right: 2px solid rgba(255, 255, 255, 0.6);
-    border-bottom: 2px solid rgba(255, 255, 255, 0.6);
-    transform: rotate(45deg);
-    animation: scrollBounce 2s infinite;
+.logo-3d:hover {
+    animation-play-state: paused;
+    transform: rotateY(15deg) rotateX(-10deg) scale(1.05);
 }
 
-@keyframes scrollBounce {
-    0%, 20%, 50%, 80%, 100% { transform: rotate(45deg) translateY(0); }
-    40% { transform: rotate(45deg) translateY(5px); }
-    60% { transform: rotate(45deg) translateY(3px); }
+@keyframes logo3DFloat {
+    0% {
+        transform: rotateY(-15deg) rotateX(5deg) translateY(0px);
+        box-shadow: 
+            10px 15px 30px rgba(27, 67, 50, 0.25),
+            20px 25px 60px rgba(13, 40, 24, 0.2),
+            inset 0 0 0 3px rgba(201, 162, 39, 0.3);
+    }
+    25% {
+        transform: rotateY(0deg) rotateX(0deg) translateY(-15px);
+        box-shadow: 
+            0 25px 40px rgba(27, 67, 50, 0.3),
+            0 40px 70px rgba(13, 40, 24, 0.25),
+            inset 0 0 0 3px rgba(201, 162, 39, 0.3);
+    }
+    50% {
+        transform: rotateY(15deg) rotateX(-5deg) translateY(0px);
+        box-shadow: 
+            -10px 15px 30px rgba(27, 67, 50, 0.25),
+            -20px 25px 60px rgba(13, 40, 24, 0.2),
+            inset 0 0 0 3px rgba(201, 162, 39, 0.3);
+    }
+    75% {
+        transform: rotateY(0deg) rotateX(0deg) translateY(-15px);
+        box-shadow: 
+            0 25px 40px rgba(27, 67, 50, 0.3),
+            0 40px 70px rgba(13, 40, 24, 0.25),
+            inset 0 0 0 3px rgba(201, 162, 39, 0.3);
+    }
+    100% {
+        transform: rotateY(-15deg) rotateX(5deg) translateY(0px);
+        box-shadow: 
+            10px 15px 30px rgba(27, 67, 50, 0.25),
+            20px 25px 60px rgba(13, 40, 24, 0.2),
+            inset 0 0 0 3px rgba(201, 162, 39, 0.3);
+    }
 }
 
 /* ============================================
    ABOUT SECTION
 ============================================ */
 .about {
-    padding: var(--space-xxl) 0;
+    padding: calc(var(--space-xxl) + 60px) 0 var(--space-xxl);
     background-color: var(--color-white);
 }
 
@@ -618,12 +629,6 @@ p {
     box-shadow: var(--shadow-lg);
 }
 
-.about-img-wrapper img {
-    width: 100%;
-    height: 500px;
-    object-fit: cover;
-}
-
 .about-img-decoration {
     position: absolute;
     top: -15px;
@@ -635,20 +640,11 @@ p {
     z-index: -1;
 }
 
-.img-placeholder {
-    background: linear-gradient(135deg, var(--color-forest-green), var(--color-dark-green));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 500px;
-    border-radius: var(--radius-lg);
-}
-
 /* ============================================
    SERVICES SECTION
 ============================================ */
 .services {
-    padding: var(--space-xxl) 0;
+    padding: calc(var(--space-xxl) + 60px) 0 var(--space-xxl);
     background-color: var(--color-cream);
     position: relative;
 }
@@ -734,7 +730,7 @@ p {
    WHY CHOOSE US SECTION
 ============================================ */
 .why-us {
-    padding: var(--space-xxl) 0;
+    padding: calc(var(--space-xxl) + 60px) 0 var(--space-xxl);
     background-color: var(--color-white);
 }
 
@@ -788,7 +784,7 @@ p {
    GALLERY SECTION
 ============================================ */
 .gallery {
-    padding: var(--space-xxl) 0;
+    padding: calc(var(--space-xxl) + 60px) 0 var(--space-xxl);
     background-color: var(--color-cream);
 }
 
@@ -865,7 +861,7 @@ p {
    TESTIMONIALS SECTION
 ============================================ */
 .testimonials {
-    padding: var(--space-xxl) 0;
+    padding: calc(var(--space-xxl) + 60px) 0 var(--space-xxl);
     background-color: var(--color-white);
 }
 
@@ -947,7 +943,7 @@ p {
    CONTACT SECTION
 ============================================ */
 .contact {
-    padding: var(--space-xxl) 0;
+    padding: calc(var(--space-xxl) + 60px) 0 var(--space-xxl);
     background-color: var(--color-cream);
     position: relative;
 }
@@ -1145,6 +1141,7 @@ p {
     font-size: 0.9rem;
     color: rgba(255, 255, 255, 0.65);
     transition: var(--transition-fast);
+    cursor: pointer;
 }
 
 .footer-links a:hover {
@@ -1335,14 +1332,8 @@ p {
         letter-spacing: 1px;
     }
 
-    .services-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .why-us-grid {
-        grid-template-columns: 1fr;
-    }
-
+    .services-grid,
+    .why-us-grid,
     .testimonials-grid {
         grid-template-columns: 1fr;
     }
@@ -1418,18 +1409,8 @@ p {
     }
 
     .logo-circle {
-        width: 90px;
-        height: 90px;
-    }
-
-    .logo-circle img {
-        width: 60px;
-        height: 60px;
-    }
-
-    .hero-whatsapp-btn {
-        padding: 0.9rem 1.8rem;
-        font-size: 1rem;
+        width: 110px;
+        height: 110px;
     }
 
     .service-card {
@@ -1467,13 +1448,7 @@ p {
 @media print {
     .floating-whatsapp,
     .back-to-top,
-    #navbar,
-    .scroll-indicator {
+    #navbar {
         display: none !important;
-    }
-
-    .hero {
-        min-height: auto;
-        padding: 2rem;
     }
 }
