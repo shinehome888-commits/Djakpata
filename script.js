@@ -1,14 +1,13 @@
 /* ============================================
    AMETCHON DJAKPATA - Spiritual & Herbal Center
-   Vanilla JavaScript - Interactive Features
+   Multi-Page Navigation System (Vanilla JS)
    
    Features:
-   - Smooth navigation scroll
-   - Active link highlighting
-   - Mobile menu toggle
-   - Scroll-based navbar styling
-   - Back to top button
-   - Fade-in animations on scroll
+   - Only one section visible at a time
+   - Menu clicks switch between "pages"
+   - Smooth fade-in transitions
+   - Mobile menu support
+   - Navbar scroll effect
 ============================================ */
 
 (function () {
@@ -20,13 +19,43 @@
     const navbar = document.getElementById('navbar');
     const navMenu = document.getElementById('navMenu');
     const navToggle = document.getElementById('navToggle');
-    const navLinks = document.querySelectorAll('.nav-link');
+    const allNavLinks = document.querySelectorAll('.nav-link');
+    const allSections = document.querySelectorAll('.page-section');
     const backToTop = document.getElementById('backToTop');
-    const sections = document.querySelectorAll('section[id]');
+
+    /* ============================================
+       PAGE SWITCHING FUNCTION
+       Hides all sections, shows only the target
+    ============================================= */
+    function showPage(targetId) {
+        // Hide all sections
+        allSections.forEach(function (section) {
+            section.classList.remove('active');
+        });
+
+        // Show the target section
+        const targetSection = document.getElementById(targetId);
+        if (targetSection) {
+            targetSection.classList.add('active');
+        }
+
+        // Update active nav link
+        allNavLinks.forEach(function (link) {
+            link.classList.remove('active');
+            if (link.getAttribute('data-target') === targetId) {
+                link.classList.add('active');
+            }
+        });
+
+        // Scroll to top smoothly
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }
 
     /* ============================================
        NAVBAR SCROLL EFFECT
-       Adds a background and shadow when user scrolls
     ============================================= */
     function handleNavbarScroll() {
         if (window.scrollY > 80) {
@@ -40,34 +69,11 @@
        BACK TO TOP BUTTON VISIBILITY
     ============================================= */
     function handleBackToTopVisibility() {
-        if (window.scrollY > 500) {
+        if (window.scrollY > 300) {
             backToTop.classList.add('visible');
         } else {
             backToTop.classList.remove('visible');
         }
-    }
-
-    /* ============================================
-       ACTIVE NAVIGATION LINK HIGHLIGHTING
-       Highlights the nav link matching current section
-    ============================================= */
-    function updateActiveLink() {
-        const scrollPos = window.scrollY + 150;
-
-        sections.forEach(function (section) {
-            const sectionTop = section.offsetTop;
-            const sectionHeight = section.offsetHeight;
-            const sectionId = section.getAttribute('id');
-
-            if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
-                navLinks.forEach(function (link) {
-                    link.classList.remove('active');
-                    if (link.getAttribute('href') === '#' + sectionId) {
-                        link.classList.add('active');
-                    }
-                });
-            }
-        });
     }
 
     /* ============================================
@@ -77,7 +83,6 @@
         navMenu.classList.toggle('active');
         navToggle.classList.toggle('active');
         
-        // Animate hamburger to X
         const spans = navToggle.querySelectorAll('span');
         if (navMenu.classList.contains('active')) {
             spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
@@ -100,65 +105,17 @@
     }
 
     /* ============================================
-       SCROLL ANIMATION - FADE IN ELEMENTS
-       Elements with .fade-in class will appear 
-       with a smooth animation when scrolled into view
-    ============================================= */
-    function initScrollAnimations() {
-        // Add fade-in class to service cards, testimonial cards, why cards
-        const animatableElements = document.querySelectorAll(
-            '.service-card, .testimonial-card, .why-card, .gallery-item, .contact-item, .about-feature'
-        );
-
-        animatableElements.forEach(function (el) {
-            el.classList.add('fade-in-element');
-        });
-
-        // Create intersection observer
-        if ('IntersectionObserver' in window) {
-            const observer = new IntersectionObserver(function (entries) {
-                entries.forEach(function (entry) {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            });
-
-            animatableElements.forEach(function (el) {
-                observer.observe(el);
-            });
-        } else {
-            // Fallback for older browsers
-            animatableElements.forEach(function (el) {
-                el.classList.add('visible');
-            });
-        }
-    }
-
-    /* ============================================
-       SMOOTH SCROLL FOR NAVIGATION LINKS
+       HANDLE NAVIGATION CLICKS
+       Prevents default scroll, switches page instead
     ============================================= */
     function handleNavClick(e) {
         e.preventDefault();
-        const targetId = this.getAttribute('href');
-        const targetSection = document.querySelector(targetId);
-
-        if (targetSection) {
-            const navHeight = navbar.offsetHeight;
-            const targetPosition = targetSection.offsetTop - navHeight;
-
-            window.scrollTo({
-                top: targetPosition,
-                behavior: 'smooth'
-            });
+        const targetId = this.getAttribute('data-target');
+        
+        if (targetId) {
+            showPage(targetId);
+            closeMobileMenu();
         }
-
-        // Close mobile menu if open
-        closeMobileMenu();
     }
 
     /* ============================================
@@ -172,10 +129,25 @@
     }
 
     /* ============================================
+       HANDLE BROWSER BACK/FORWARD BUTTONS
+       Uses hash to navigate between pages
+    ============================================= */
+    function handleHashChange() {
+        const hash = window.location.hash.replace('#', '');
+        const validSections = ['home', 'about', 'services', 'why-choose-us', 'gallery', 'testimonials', 'contact'];
+        
+        if (hash && validSections.includes(hash)) {
+            showPage(hash);
+        } else {
+            showPage('home');
+        }
+    }
+
+    /* ============================================
        EVENT LISTENERS
     ============================================= */
     
-    // Scroll events (throttled for performance)
+    // Scroll events (throttled)
     let scrollTimeout;
     window.addEventListener('scroll', function () {
         if (scrollTimeout) {
@@ -184,7 +156,6 @@
         scrollTimeout = window.requestAnimationFrame(function () {
             handleNavbarScroll();
             handleBackToTopVisibility();
-            updateActiveLink();
         });
     });
 
@@ -193,14 +164,8 @@
         navToggle.addEventListener('click', toggleMobileMenu);
     }
 
-    // Navigation link clicks
-    navLinks.forEach(function (link) {
-        link.addEventListener('click', handleNavClick);
-    });
-
-    // Footer link clicks
-    const footerLinks = document.querySelectorAll('.footer-links a');
-    footerLinks.forEach(function (link) {
+    // All navigation links (menu, footer, service cards)
+    allNavLinks.forEach(function (link) {
         link.addEventListener('click', handleNavClick);
     });
 
@@ -225,37 +190,26 @@
         }
     });
 
+    // Browser back/forward buttons
+    window.addEventListener('hashchange', handleHashChange);
+
     /* ============================================
        INITIALIZATION
     ============================================= */
     document.addEventListener('DOMContentLoaded', function () {
+        // Check if there's a hash in the URL on load
+        const initialHash = window.location.hash.replace('#', '');
+        const validSections = ['home', 'about', 'services', 'why-choose-us', 'gallery', 'testimonials', 'contact'];
+        
+        if (initialHash && validSections.includes(initialHash)) {
+            showPage(initialHash);
+        } else {
+            // Default: show home page only
+            showPage('home');
+        }
+
         handleNavbarScroll();
         handleBackToTopVisibility();
-        updateActiveLink();
-        initScrollAnimations();
     });
-
-    /* ============================================
-       DYNAMIC STYLES FOR SCROLL ANIMATIONS
-       Injected via JS to avoid extra CSS rules
-    ============================================= */
-    var style = document.createElement('style');
-    style.textContent = `
-        .fade-in-element {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
-        }
-        .fade-in-element.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .fade-in-element:nth-child(2) { transition-delay: 0.1s; }
-        .fade-in-element:nth-child(3) { transition-delay: 0.2s; }
-        .fade-in-element:nth-child(4) { transition-delay: 0.3s; }
-        .fade-in-element:nth-child(5) { transition-delay: 0.4s; }
-        .fade-in-element:nth-child(6) { transition-delay: 0.5s; }
-    `;
-    document.head.appendChild(style);
 
 })();
